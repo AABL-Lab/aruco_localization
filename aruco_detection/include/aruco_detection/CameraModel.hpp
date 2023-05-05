@@ -9,6 +9,7 @@
 #define ARUCO_DETECTION_INCLUDE_CAMERAMODEL_HPP_
 
 #include <opencv2/core/core.hpp>
+#include <opencv2/calib3d.hpp>
 #include <boost/shared_ptr.hpp>
 #include <sensor_msgs/CameraInfo.h>
 #include <image_geometry/pinhole_camera_model.h>
