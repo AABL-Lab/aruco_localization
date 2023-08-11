@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import cv2
 import argparse
+from cv2 import aruco
 
 def generate_single_marker(aruco_dict, marker_size, marker_id):
 #    marker_size = int(input("Enter the marker size: "))
@@ -40,21 +41,26 @@ def generate_bulk_markers(aruco_dict, marker_size, num_markers):
 
 
 # generate a grid board with aruco markers
-def generate_aruco_board(aruco_dict, marker_X, marker_Y, marker_length, marker_separation, margins, border_bits):
+def generate_aruco_board(aruco_dict, marker_X, marker_Y, marker_length, marker_separation, margins, border_bits=1):
 
     # settings for printing out aruco board
     print_width = marker_X * (marker_length + marker_separation) - marker_separation + 2 * margins
     print_height = marker_Y * (marker_length + marker_separation) - marker_separation + 2 * margins
-    imageSize = [print_width, print_height]
+    imageSize = (print_width, print_height)
+    print(imageSize)
     board = cv2.aruco.GridBoard_create(marker_X, marker_Y, marker_length, marker_separation, aruco_dict)
-    board_img = cv2.drawPlanarBoard(board, imageSize, 'MarginSize', margins, 'BorderBits', border_bits)
-    cv2.imshow(board_img)
+    # board_img = cv2.drawPlanarBoard(imageSize, 'MarginSize', margins, 'BorderBits', border_bits)
+    # board_img = board.draw(imageSize, marginSize=margins, borderBits=border_bits)
+    board_img = board.draw(imageSize)
+    cv2.imshow('mywin',board_img)
+    cv2.waitKey(-1)
 
     # save image
     # cv2.imwrite(board_img, 'GridBoard.png')
 
 
 # save aruco board settings to a .yml file
+# yml packages - pyyaml
 def generate_yml_file(aruco_dict, marker_X, marker_Y, marker_length, marker_separation):
     file_name = input("Please enter the file name for saving a .yml file: ")
     yml_content = [
@@ -96,12 +102,12 @@ def main():
                     epilog='Enjoy the program! :)')
    
    parser.add_argument("-d", "--dictionary", type=str, default="DICT_4X4_50")
-   parser.add_argument("-s", "--size", type=int, default=200)
-   parser.add_argument("-x", "--x", type=int, default=4)      # numbers of markers in x direction
+   parser.add_argument("-s", "--size", type=int, default=20)
+   parser.add_argument("-x", "--x", type=int, default=7)      # numbers of markers in x direction
    parser.add_argument("-y", "--y", type=int, default=3)      # numbers of markers in y direction
-   parser.add_argument("-l", "--length", type=int, default=1)    # marker length in centimeters
-   parser.add_argument("-sep", "--separation", type=int, default=1)    # separation between markers in centimeters
-   parser.add_argument("-ma", "--margins", type=int, default=1)    # margins of the board in centimeters default is 1cm
+   parser.add_argument("-l", "--length", type=int, default=100)    # marker length in pixels
+   parser.add_argument("-sep", "--separation", type=int, default=10)    # separation between markers in pixels
+   parser.add_argument("-ma", "--margins", type=int, default=0)    # margins of the board in centimeters default is 1cm
    parser.add_argument("-bits", "--borderbits", type=int, default=1)    # bits of the board default is 1
 
    parser.add_argument("-id", "--id", type=int, default=0)
